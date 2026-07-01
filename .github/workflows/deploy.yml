@@ -15,12 +15,10 @@ jobs:
       - name: Eksekusi Perintah di VPS Lewat SSH
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          host: "${{ secrets.SSH_HOST }}"
+          username: "${{ secrets.SSH_USERNAME }}"
+          password: "${{ secrets.SSH_PASSWORD }}"
           script: |
             cd /app/uas-web
-            # Mengunduh pembaruan file index.html, docker-compose, dan nginx.conf langsung ke VPS
             git pull origin main
-            # Menyalakan ulang stack docker agar perubahan langsung diterapkan
             docker compose up -d --build
