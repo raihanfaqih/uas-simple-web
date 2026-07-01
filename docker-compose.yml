@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # 1. Aplikasi Web Utama (Node.js/HTML)
+  web-app:
+    image: node:18-alpine
+    container_name: uas_web_app
+    restart: always
+    working_dir: /home/node/app
+    command: >
+      sh -c "npx http-server -p 3000"
+    volumes:
+      - .:/home/node/app
+    ports:
+      - "3000:3000"
+
+  # 2. Alat Monitoring (Uptime Kuma)
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime_kuma
+    restart: always
+    volumes:
+      - kuma-data:/app/data
+    ports:
+      - "3001:3001"
+
+  # 3. Reverse Proxy (Nginx) - Menjaga Port Utama VPS Kamu
+  nginx-proxy:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    restart: always
+    ports:
+      - "80:80"   # Membuka port 80 VPS kamu ke publik
+      - "443:443" # Membuka port 443 VPS kamu ke publik
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+
+volumes:
+  kuma-data:
