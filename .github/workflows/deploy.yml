@@ -1,0 +1,26 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main # Akan berjalan otomatis setiap kamu melakukan git push ke branch main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Eksekusi Perintah di VPS Lewat SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd /app/uas-web
+            # Mengunduh pembaruan file index.html, docker-compose, dan nginx.conf langsung ke VPS
+            git pull origin main
+            # Menyalakan ulang stack docker agar perubahan langsung diterapkan
+            docker compose up -d --build
