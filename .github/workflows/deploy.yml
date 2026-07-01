@@ -3,7 +3,7 @@ name: Deploy to VPS
 on:
   push:
     branches:
-      - main # Akan berjalan otomatis setiap kamu melakukan git push ke branch main
+      - main # Jalankan otomatis saat kamu push ke branch main
 
 jobs:
   deploy:
@@ -13,12 +13,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Eksekusi Perintah di VPS Lewat SSH
-        uses: appleboy/ssh-action@1.1.0
+        uses: appleboy/ssh-action@master  # Kita gunakan master yang kompatibel dengan password fallback
         with:
-          host: "${{ secrets.SSH_HOST }}"
-          username: "${{ secrets.SSH_USERNAME }}"
-          password: "${{ secrets.SSH_PASSWORD }}"
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }} # Memakai password root VPS DomaiNesia kamu
+          port: 22
           script: |
             cd /app/uas-web
+            git reset --hard origin/main
             git pull origin main
             docker compose up -d --build
