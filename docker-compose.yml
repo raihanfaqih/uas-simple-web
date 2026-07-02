@@ -34,6 +34,7 @@ services:
       - "443:443" # Membuka port 443 VPS kamu ke publik
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
 
 volumes:
   kuma-data:
