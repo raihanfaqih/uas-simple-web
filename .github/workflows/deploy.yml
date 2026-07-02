@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Eksekusi Perintah di VPS Lewat SSH
-        uses: appleboy/ssh-action@v1.0.3 # versi rilis stabil, bukan @master
+        uses: appleboy/ssh-action@master # versi rilis stabil, bukan @master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
