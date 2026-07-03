@@ -1,20 +1,17 @@
 version: '3.8'
-
 services:
-  # 1. Aplikasi Web Utama (Node.js/HTML)
+  # 1. Aplikasi Web Utama Kamu (ExpressJS / Static HTML)
   web-app:
     image: node:18-alpine
     container_name: uas_web_app
     restart: always
     working_dir: /home/node/app
     command: >
-      sh -c "npx http-server -p 3000"
-    volumes:
-      - .:/home/node/app
+      sh -c "echo '<h1>Website UAS Raihan Berhasil Berjalan dengan Docker!</h1>' > index.html &&
+            npx http-server -p 3000"
     ports:
       - "3000:3000"
-
-  # 2. Alat Monitoring (Uptime Kuma)
+  # 2. Monitoring Tool (Uptime Kuma)
   uptime-kuma:
     image: louislam/uptime-kuma:1
     container_name: uptime_kuma
@@ -23,18 +20,16 @@ services:
       - kuma-data:/app/data
     ports:
       - "3001:3001"
-
-  # 3. Reverse Proxy (Nginx) - Menjaga Port Utama VPS Kamu
+  # 3. Reverse Proxy (Nginx)
   nginx-proxy:
     image: nginx:alpine
     container_name: nginx_proxy
     restart: always
     ports:
-      - "80:80"   # Membuka port 80 VPS kamu ke publik
-      - "443:443" # Membuka port 443 VPS kamu ke publik
+      - "80:80"
+      - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
-
 volumes:
   kuma-data:
