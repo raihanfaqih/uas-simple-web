@@ -1,0 +1,26 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main # Jalankan otomatis saat kamu push ke branch main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Eksekusi Perintah di VPS Lewat SSH
+        uses: appleboy/ssh-action@master # versi rilis stabil, bukan @master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }} # pakai private key, bukan password
+          port: 22
+          script: |
+            cd /app/uas-web
+            git reset --hard origin/main
+            git pull origin main
+            docker compose up -d --build
