@@ -1,14 +1,13 @@
 version: '3.8'
 services:
-  # 1. Aplikasi Web Utama Kamu (ExpressJS / Static HTML)
   web-app:
     image: node:18-alpine
     container_name: uas_web_app
     restart: always
     working_dir: /home/node/app
-    command: >
-      sh -c "echo '<h1>Website UAS Raihan Berhasil Berjalan dengan Docker!</h1>' > index.html &&
-            npx http-server -p 3000"
+    volumes:
+      - ./html:/home/node/app
+    command: sh -c "npx http-server -p 3000"
     ports:
       - "3000:3000"
   # 2. Monitoring Tool (Uptime Kuma)
